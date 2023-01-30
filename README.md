@@ -37,6 +37,7 @@ docker compose up
 ionic serve
 ```
 
-The application will automatically appear on your default browser. If that doesn't happen, go to http://localhost:8100/folder/.
+The application will automatically appear on your default browser. If that doesn't happen, go to
+http://localhost:8100/folder/.
 
 
