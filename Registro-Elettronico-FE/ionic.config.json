@@ -1,0 +1,7 @@
+{
+  "name": "Registro Elettronico - PXLTK",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

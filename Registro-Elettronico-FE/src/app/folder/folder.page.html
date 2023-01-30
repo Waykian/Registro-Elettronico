@@ -1,0 +1,193 @@
+<ko-modal [errorToShow]="error" ></ko-modal>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ folder }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ion-content id="container">
+    <ion-grid>
+      <ion-header>
+        <ion-row>
+          <ion-col>Matricola</ion-col>
+          <ion-col>Nome</ion-col>
+          <ion-col>Cognome</ion-col>
+          <ion-col>Assenze</ion-col>
+        </ion-row>
+      </ion-header>
+
+      <ion-row
+        class="ion-grid-body"
+        *ngFor="let alunno of alunniCopy"
+      >
+        <ion-col> {{ alunno.matricola }} </ion-col>
+        <ion-col> {{ alunno.nome }} </ion-col>
+        <ion-col> {{ alunno.cognome }} </ion-col>
+        <ion-col> {{ alunno.assenze }} </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-content [ngSwitch]="folder">
+      <ion-content *ngSwitchCase="'create'">
+        <form
+          [formGroup]="formAlunno"
+          (ngSubmit)="onSubmitCreate()"
+          novalidate
+        >
+
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formAlunno.controls['nome'].hasError('required')}"
+          >
+            <ion-label>Nome: </ion-label>
+            <ion-input type="text" formControlName="nome"></ion-input>
+          </ion-item>
+
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formAlunno.controls['cognome'].hasError('required')}"
+          >
+            <ion-label>Cognome: </ion-label>
+            <ion-input type="text" formControlName="cognome"></ion-input>
+          </ion-item>
+
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formAlunno.controls['assenze'].hasError('required')}"
+          >
+            <ion-label>Assenze: </ion-label>
+            <ion-input type="number" formControlName="assenze"></ion-input>
+          </ion-item>
+
+          <br />
+          
+          <ion-button id="createButton" type="submit">Inserisci</ion-button>
+          
+        </form>
+      </ion-content>
+
+      <ion-content *ngSwitchCase="'update'">
+        <form
+          [formGroup]="formAlunnoEdit"
+          (ngSubmit)="onSubmitUpdate()"
+          novalidate
+        >
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formAlunnoEdit.controls['matricola'].hasError('required')}"
+          >
+            <ion-label>Matricola: </ion-label>
+            <ion-input type="number" formControlName="matricola"></ion-input>
+          </ion-item>
+
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formAlunnoEdit.controls['nome'].hasError('pattern')}"
+          >
+            <ion-label>Nome: </ion-label>
+            <ion-input type="text" formControlName="nome"></ion-input>
+          </ion-item>
+
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formAlunnoEdit.controls['cognome'].hasError('pattern')}"
+          >
+            <ion-label>Cognome: </ion-label>
+            <ion-input type="text" formControlName="cognome"></ion-input>
+          </ion-item>
+
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formAlunnoEdit.controls['assenze'].hasError('pattern')}"
+          >
+            <ion-label>Assenze: </ion-label>
+            <ion-input type="number" formControlName="assenze"></ion-input>
+          </ion-item>
+
+          <br />
+
+          <ion-button id="updateButton" type="submit">Inserisci</ion-button>
+        </form>
+      </ion-content>
+
+      <ion-content *ngSwitchCase="'insertVoti'">
+        <form [formGroup]="formVoti" (ngSubmit)="insertVotoInList()" novalidate>
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formVoti.controls['matricola'].hasError('required')}"
+          >
+            <ion-label>Matricola: </ion-label>
+            <ion-input type="number" formControlName="matricola"></ion-input>
+          </ion-item>
+
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formVoti.controls['voto'].hasError('required')}"
+          >
+            <ion-label>Voto: </ion-label>
+            <ion-input type="number" formControlName="voto"></ion-input>
+          </ion-item>
+          
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formVoti.controls['materia'].hasError('required')}"
+          >
+            <ion-label>Materia: </ion-label>
+            <ion-input type="text" formControlName="materia"></ion-input>
+          </ion-item>
+    
+          <ion-button  type="submit">+</ion-button>
+
+        </form>
+        
+        <ion-grid id="" *ngIf="checkFirstVotoPushed()">
+          <ion-header>
+            <ion-row>
+              <ion-col>Matricola</ion-col>
+              <ion-col>Materia</ion-col>
+              <ion-col>Voto</ion-col>
+            </ion-row>
+          </ion-header>
+    
+          <ion-row
+            class="ion-grid-body"
+            *ngFor="let voti of tempListVoti"
+          >
+            <ion-col> {{ voti.matricola }} </ion-col>
+            <ion-col> {{ voti.materia }} </ion-col>
+            <ion-col> {{ voti.voto }} </ion-col>
+          </ion-row>
+          <ion-button (click)="onSubmitVoti()">Inserisci</ion-button>
+        </ion-grid>
+
+        <ion-text *ngIf="didInsertVotiSucceed()">
+          Voti aggiunti con successo
+        </ion-text>
+      </ion-content>
+
+      <ion-content *ngSwitchCase="'get'">
+        <form [formGroup]="formMatricola" (ngSubmit)="onSubmitGet()" novalidate>
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formMatricola.controls['matricola'].hasError('required')}"
+          >
+            <ion-label>Matricola: </ion-label>
+            <ion-input type="number" formControlName="matricola"></ion-input>
+          </ion-item>
+
+          <ion-button id="getButton" type="submit">Cerca</ion-button>
+        </form>
+      </ion-content>
+
+      <ion-content *ngSwitchCase="'remove'">
+        <form
+          [formGroup]="formMatricola"
+          (ngSubmit)="onSubmitRemove()"
+          novalidate
+        >
+          <ion-item
+            [ngClass]="{'animated shake error': checkSubmit() && formMatricola.controls['matricola'].hasError('required')}"
+          >
+            <ion-label>Matricola: </ion-label>
+            <ion-input type="number" formControlName="matricola"></ion-input>
+          </ion-item>
+
+          <ion-button id="removeButton" type="submit">Rimuovi</ion-button>
+        </form>
+      </ion-content>
+
+    </ion-content>
+  </ion-content>
+</ion-content>
