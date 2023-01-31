@@ -1,5 +1,5 @@
 # Registro-Digitale
-A digital register made with a Dockerized Postgres database, backend in Spring Boot, and frontend in Angular + Ionic.
+A digital register made with a Dockerized PostgreSQL database, backend in Spring Boot, and frontend in Angular + Ionic.
 
 # Setup
 1. You need to manually create the schema *demo*, containing the tables *alunni* and *voti*
