@@ -1,4 +1,4 @@
-# Registro-Digitale
+# Registro-Elettronico
 A digital register made with a Dockerized PostgreSQL database, backend in Spring Boot, and frontend in Angular + Ionic.
 
 # Setup
